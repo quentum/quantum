@@ -31,3 +31,6 @@
 [submodule "vendor/third_party/icu"]
 	path = vendor/third_party/icu
 	url = https://chromium.googlesource.com/chromium/deps/icu
+[submodule "vendor/third_party/modp_b64"]
+	path = vendor/third_party/modp_b64
+	url = https://chromium.googlesource.com/chromium/src/third_party/modp_b64
