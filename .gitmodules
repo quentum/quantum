@@ -1,3 +1,6 @@
 [submodule "vendor/testing"]
 	path = vendor/testing
 	url = https://github.com/baiduclient/chromium_testing.git
+[submodule "vendor/third_party/yasm"]
+	path = vendor/third_party/yasm
+	url = https://github.com/baiduclient/yasm.git
