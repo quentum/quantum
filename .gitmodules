@@ -40,3 +40,6 @@
 [submodule "vendor/third_party/libxml"]
 	path = vendor/third_party/libxml
 	url = https://github.com/baiduclient/libxml.git
+[submodule "vendor/third_party/apple_apsl"]
+	path = vendor/third_party/apple_apsl
+	url = https://github.com/baiduclient/apple_apsl.git
