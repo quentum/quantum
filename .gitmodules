@@ -13,3 +13,6 @@
 [submodule "vendor/build"]
 	path = vendor/build
 	url = https://chromium.googlesource.com/chromium/src/build
+[submodule "vendor/base"]
+	path = vendor/base
+	url = https://chromium.googlesource.com/chromium/src/base
