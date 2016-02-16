@@ -46,3 +46,6 @@
 [submodule "vendor/gin"]
 	path = vendor/gin
 	url = https://github.com/baiduclient/gin.git
+[submodule "vendor/native-mate"]
+	path = vendor/native-mate
+	url = https://github.com/baiduclient/native-mate.git
