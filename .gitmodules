@@ -7,3 +7,6 @@
 [submodule "vendor/third_party/boringssl"]
 	path = vendor/third_party/boringssl
 	url = https://github.com/baiduclient/boringssl.git
+[submodule "vendor/node"]
+	path = vendor/node
+	url = https://github.com/baiduclient/node.git
