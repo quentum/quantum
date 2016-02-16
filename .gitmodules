@@ -28,3 +28,6 @@
 [submodule "vendor/third_party/zlib"]
 	path = vendor/third_party/zlib
 	url = https://chromium.googlesource.com/chromium/src/third_party/zlib
+[submodule "vendor/third_party/icu"]
+	path = vendor/third_party/icu
+	url = https://chromium.googlesource.com/chromium/deps/icu
