@@ -10,3 +10,6 @@
 [submodule "vendor/node"]
 	path = vendor/node
 	url = https://github.com/baiduclient/node.git
+[submodule "vendor/build"]
+	path = vendor/build
+	url = https://chromium.googlesource.com/chromium/src/build
