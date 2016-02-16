@@ -4,3 +4,6 @@
 [submodule "vendor/third_party/yasm"]
 	path = vendor/third_party/yasm
 	url = https://github.com/baiduclient/yasm.git
+[submodule "vendor/third_party/boringssl"]
+	path = vendor/third_party/boringssl
+	url = https://github.com/baiduclient/boringssl.git
