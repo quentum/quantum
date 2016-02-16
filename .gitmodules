@@ -25,3 +25,6 @@
 [submodule "vendor/tools/clang"]
 	path = vendor/tools/clang
 	url = https://chromium.googlesource.com/chromium/src/tools/clang
+[submodule "vendor/third_party/zlib"]
+	path = vendor/third_party/zlib
+	url = https://chromium.googlesource.com/chromium/src/third_party/zlib
