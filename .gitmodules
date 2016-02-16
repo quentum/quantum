@@ -52,3 +52,6 @@
 [submodule "vendor/crypto"]
 	path = vendor/crypto
 	url = https://chromium.googlesource.com/chromium/src/crypto
+[submodule "vendor/third_party/WebKit/Source/core/streams"]
+	path = vendor/third_party/WebKit/Source/core/streams
+	url = https://github.com/baiduclient/webkit_stream_js.git
