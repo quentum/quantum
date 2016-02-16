@@ -49,3 +49,6 @@
 [submodule "vendor/native-mate"]
 	path = vendor/native-mate
 	url = https://github.com/baiduclient/native-mate.git
+[submodule "vendor/crypto"]
+	path = vendor/crypto
+	url = https://chromium.googlesource.com/chromium/src/crypto
