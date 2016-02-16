@@ -34,3 +34,6 @@
 [submodule "vendor/third_party/modp_b64"]
 	path = vendor/third_party/modp_b64
 	url = https://chromium.googlesource.com/chromium/src/third_party/modp_b64
+[submodule "vendor/tools/depot_tools"]
+	path = vendor/tools/depot_tools
+	url = https://chromium.googlesource.com/chromium/tools/depot_tools.git
