@@ -19,3 +19,6 @@
 [submodule "vendor/v8"]
 	path = vendor/v8
 	url = https://chromium.googlesource.com/v8/v8.git
+[submodule "vendor/tools/gyp"]
+	path = vendor/tools/gyp
+	url = https://chromium.googlesource.com/external/gyp
