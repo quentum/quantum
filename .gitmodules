@@ -37,3 +37,6 @@
 [submodule "vendor/tools/depot_tools"]
 	path = vendor/tools/depot_tools
 	url = https://chromium.googlesource.com/chromium/tools/depot_tools.git
+[submodule "vendor/third_party/libxml"]
+	path = vendor/third_party/libxml
+	url = https://github.com/baiduclient/libxml.git
