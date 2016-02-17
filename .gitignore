@@ -1,2 +1,4 @@
-./out
-./vendor/out
+out
+vendor/out
+*.pyc
+vendor/llvm-build
