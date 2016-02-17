@@ -16,7 +16,7 @@ CLANG_SUB_REVISION=1
 PACKAGE_VERSION="${CLANG_REVISION}-${CLANG_SUB_REVISION}"
 
 THIS_DIR="$(dirname "${0}")"
-LLVM_DIR="${THIS_DIR}/../vendor/llvm"
+LLVM_DIR="${THIS_DIR}/../vendor/third_party/llvm"
 LLVM_BUILD_DIR="${LLVM_DIR}/../llvm-build/Release+Asserts"
 STAMP_FILE="${LLVM_DIR}/../llvm-build/cr_build_revision"
 

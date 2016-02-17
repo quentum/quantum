@@ -1,4 +1,4 @@
 out
 vendor/out
 *.pyc
-vendor/llvm-build
+vendor/third_party/llvm-build
