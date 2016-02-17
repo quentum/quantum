@@ -14,11 +14,11 @@ def main():
     update_submodules()
 
 def update_clang():
-  execute_stdout([os.path.join(SOURCE_ROOT, 'script', 'update-clang.sh')])
+    execute_stdout([os.path.join(SOURCE_ROOT, 'script', 'update-clang.sh')])
 
 def update_submodules():
-  execute_stdout(['git', 'submodule', 'sync'])
-  execute_stdout(['git', 'submodule', 'update', '--init', '--recursive'])
+    execute_stdout(['git', 'submodule', 'sync'])
+    execute_stdout(['git', 'submodule', 'update', '--init', '--recursive'])
 
 if __name__ == '__main__':
     sys.exit(main())
