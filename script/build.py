@@ -62,7 +62,7 @@ def check_args(args):
 def setup_windows_env():
     if sys.platform != 'win32':
         return
-    os.environ['DEPOT_TOOLS_WIN_TOOLCHAIN'] = 0
+    os.environ['DEPOT_TOOLS_WIN_TOOLCHAIN'] = '0'
     winsdk_dir = os.environ['WindowsSdkDir']
     if not winsdk_dir or winsdk_dir.isspace():
         raise Exception('windows sdk not installed')
