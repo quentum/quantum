@@ -52,7 +52,7 @@ def check_args(args):
 
     configuration_len = len(args.configuration)
     if configuration_len > 2:
-        raise Exception('configuration count must between 1 and 2')
+        raise Exception('configuration count must be 1 or 2')
 
     valid_configuration = ['Debug', 'Release']
     for configuration in args.configuration:
