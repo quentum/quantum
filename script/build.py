@@ -23,10 +23,10 @@ def main():
 
 def parse_args():
     parser = argparse.ArgumentParser(description='build vendor')
-    parser.add_argument('--target-arch',            \
-                        action = 'store',           \
-                        choices = ['x86', 'x64'],   \
-                        default = 'x86',            \
+    parser.add_argument('--target-arch',                \
+                        action = 'store',               \
+                        choices = ['x86', 'x64'],       \
+                        default = util.default_arch(),  \
                         help = 'specify the arch to build for')
     parser.add_argument('--configuration',          \
                         action = 'store',           \
