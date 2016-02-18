@@ -42,7 +42,7 @@ $ python script\build.py --configuration Debug Release
 ```
 
 After building is done, you can find `dll lib` under `vendor\out\Debug` (debug
-target) or under `out\Release` (release target).
+target) or under `vendor\out\Release` (release target).
 
 ## 64bit Build
 
@@ -53,4 +53,4 @@ the build script:
 $ python script\build.py --configuration Debug Release --target-arch=x64
 ```
 After building is done, you can find `dll lib` under `vendor\out\Debug_x64` (debug
-target) or under `out\Release_x64` (release target).
+target) or under `vendor\out\Release_x64` (release target).
