@@ -54,3 +54,13 @@ $ python script\build.py --configuration Debug Release --target-arch=x64
 ```
 After building is done, you can find `*.dll *.lib` under `vendor\out\Debug_x64` (debug
 target) or under `vendor\out\Release_x64` (release target).
+
+## Build Instructions (Mac)
+Only support x64 target on Mac. The default target_arch is set to x64 when you execute 'script/build.py' without parameters.
+The other building steps are exactly as same as Windows.
+
+Build x64 Debug targets by default:
+
+```powershell
+$ python script\build.py
+```
