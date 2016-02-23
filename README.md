@@ -62,5 +62,5 @@ The other building steps are exactly as same as Windows.
 Build x64 Debug targets by default:
 
 ```powershell
-$ python script\build.py
+$ python script/build.py
 ```
