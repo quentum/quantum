@@ -55,3 +55,6 @@
 [submodule "vendor/third_party/WebKit/Source/core/streams"]
 	path = vendor/third_party/WebKit/Source/core/streams
 	url = https://github.com/baiduclient/webkit_stream_js.git
+[submodule "vendor/ipc"]
+	path = vendor/ipc
+	url = https://github.com/baiduclient/ipc.git

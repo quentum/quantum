@@ -4,6 +4,7 @@
       'target_name': 'vendor',
       'type': 'none',
       'dependencies': [
+        'ipc/ipc.gyp:ipc',
         'gin/gin.gyp:gin',
         'node/node.gyp:node',
         'base/base.gyp:base_i18n',
