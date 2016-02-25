@@ -1,5 +1,5 @@
-out
-vendor/out
 *.pyc
+vendor/out
+vendor/modules.gypi
 vendor/build/util/LASTCHANGE
 vendor/third_party/llvm-build
