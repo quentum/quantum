@@ -2,6 +2,7 @@
 
 import os
 import sys
+import json
 import subprocess
 
 def execute_stdout(argv, env=os.environ):
@@ -17,3 +18,7 @@ def default_arch():
     if sys.platform == 'darwin':
         arch = 'x64'
     return arch
+
+def write_dict_to(obj, filename):
+    with open(filename, 'w') as file_handle:
+        json.dump(obj, file_handle, indent = 4)
