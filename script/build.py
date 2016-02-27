@@ -24,7 +24,7 @@ def parse_args():
     parser.add_argument('--target',                                 \
                         action = 'store',                           \
                         nargs = '+',                                \
-                        default = 'ipc',                            \
+                        default = ['ipc'],                            \
                         help = 'specify the target to build')
     parser.add_argument('--configuration',                          \
                         action = 'store',                           \
