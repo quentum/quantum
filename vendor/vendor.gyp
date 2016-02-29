@@ -21,6 +21,9 @@
                     ]
                 }]
             ],
+            'dependencies': [
+                'experimental/ipc/ipc.gyp:ipc_posix_all'
+            ]
         }
     ]
 }
