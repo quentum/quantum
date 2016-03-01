@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "base/at_exit.h"
+#include "base/command_line.h"
 
 #include "names.h"
 #include "messages.h"
@@ -126,7 +127,13 @@ private:
 }
 
 int main(int argc, char** argv) {
+    base::CommandLine::Init(argc, argv);
     base::AtExitManager atexit_manager;
+
+    logging::LoggingSettings settings;
+    settings.logging_dest = logging::LOG_TO_SYSTEM_DEBUG_LOG;
+    InitLogging(settings);
+
     demo::Server server;
     server.Run();
     return 0;
