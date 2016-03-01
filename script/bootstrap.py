@@ -163,9 +163,9 @@ def generate_ninja_files(args):
     node_config_gypi = os.path.join('node', 'config.gypi')
     exec_args = ['python', gyp_file, '--depth=.', '--toplevel-dir=.', 'vendor.gyp']
     exec_args += ['-I', 'custom.gypi']
-    if os.path.isfile(node_common_gypi):
+    if os.path.isfile(node_common_gypi) and args.group != 'basic':
         exec_args += ['-I', node_common_gypi]
-    if os.path.isfile(node_config_gypi):
+    if os.path.isfile(node_config_gypi) and args.group != 'basic':
         exec_args += ['-I', node_config_gypi]
     exec_args += ['-D', 'component=' + args.component]
     exec_args += ['-D', 'library=' + args.library]
