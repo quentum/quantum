@@ -25,6 +25,22 @@
                     'WarnAsError': 'false',
                   },
                 },
+                'configurations': {
+                    'Debug': {
+                        'msvs_settings': {
+                            'VCCLCompilerTool': {
+                                'RuntimeLibrary': 3  # /MDD
+                            }
+                        }
+                    },
+                    'Release': {
+                        'msvs_settings': {
+                            'VCCLCompilerTool': {
+                                'RuntimeLibrary': 2 # /MD
+                            }
+                        }
+                    }
+                }
             }],
             ['OS=="mac"', {
                 'xcode_settings': {
