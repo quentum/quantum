@@ -4,124 +4,145 @@
 #include "base/command_line.h"
 
 #include "names.h"
-#include "messages.h"
-#include "channel_worker.h"
-#include "channel_department.h"
+#include "message_classes.h"
+#include "message_route.h"
 
-namespace demo {
+#include "automatic_channel.h"
+#include "channel_map.h"
 
-class MainChannelWorker : public ChannelWorker {
-public:
-    MainChannelWorker() {}
-    ~MainChannelWorker() {}
-public:
-    typedef base::Callback<void(const std::string&)> OnCreateSubChannel;
-    void SetCreateCallback(OnCreateSubChannel callback) {
-        _create_callback = callback;
-    }
+namespace cif {
 
-    bool OnMessageReceived(const IPC::Message& message) override {
-        IPC_BEGIN_MESSAGE_MAP(MainChannelWorker, message)
-            IPC_MESSAGE_HANDLER(ChannelCreateResponsetMessage, OnCreateChannelResponseMessage)
-        IPC_END_MESSAGE_MAP()
-        return true;
-    }
-
-    void OnChannelConnected(int32_t peer_pid) override {
-        ChannelWorker::OnChannelConnected(peer_pid);
-        Send(new ChannelCreateRequestMessage(0, "i am a client"));
-    }
+class Client : public AutomaticChannel::Listener {
 private:
-    void OnCreateChannelResponseMessage(const std::string& name) {
-        LOG(INFO) << "sub channel name received:" << name;
-        _create_callback.Run(name);
-        Close();
-    }
-private:
-    base::Callback<void(const std::string&)> _create_callback;
-};
+    enum ChannelType : int32_t {
+        ControlChannel = 0x20160310,
+        SubChannel
+    };
 
-class EchoChannelWorker : public ChannelWorker {
 public:
-    EchoChannelWorker() {}
-    ~EchoChannelWorker() {}
-public:
-    bool OnMessageReceived(const IPC::Message& message) override {
-        IPC_BEGIN_MESSAGE_MAP(EchoChannelWorker, message)
-            IPC_MESSAGE_HANDLER(ChannelEchoMessage, OnEchoMessage)
-        IPC_END_MESSAGE_MAP()
-        return true;
-    }
-private:
-    void OnEchoMessage(const std::string& message) {
-        LOG(INFO) << "echo message: " << message;
-    }
-};
+    Client() : _current(nullptr) {}
 
-class Client {
-public:
-    Client() : _worker(nullptr) {}
-    ~Client() {}
-public:
+    void Initialize() {
+        _main_loop.reset(new base::MessageLoop);
+        _quit_thread.reset(new base::Thread("QuitMonitorThread"));
+        _io_thread.reset(new base::Thread("IOThread"));
+    }
+
     void Run() {
-        _loop.reset(new base::MessageLoop);
-        this->Start();
-        _loop->Run();
+        Start();
+        _main_loop->Run();
     }
 
+public:
+    bool OnMessageReceived(int32_t id, const IPC::Message& message) {
+        _current = _map.Get(id);
+
+        ChannelType type = static_cast<ChannelType>(id);
+        if (type == ChannelType::ControlChannel) {
+            IPC_BEGIN_MESSAGE_MAP(Client, message)
+                IPC_MESSAGE_HANDLER(CreateResponseMsg, OnCreateResponse)
+            IPC_END_MESSAGE_MAP()
+        } else {
+            IPC_BEGIN_MESSAGE_MAP(Client, message)
+                IPC_MESSAGE_HANDLER(EchoMessage, OnEchoMessage)
+            IPC_END_MESSAGE_MAP()
+        }
+
+        return true;
+    }
+
+    void OnChannelConnected(int32_t id, int32_t peer_pid) {
+        _current = _map.Get(id);
+        ChannelType type = static_cast<ChannelType>(id);
+        if (type == ChannelType::ControlChannel) {
+            _current->Send(new CreateRequestMsg(0, "Hello World From Client!"));
+        }
+    }
+
+    void OnChannelError(int32_t id) {
+    }
+
+private:
     void Start() {
-        _monitoring.reset(new base::Thread("monitoring std input thread"));
-        _monitoring->Start();
-        _monitoring->message_loop()->PostTask(FROM_HERE, base::Bind(&Client::MonitoringQuit, base::Unretained(this)));
+        _quit_thread->Start();
+        _quit_thread->message_loop()->PostTask(FROM_HERE,
+                    base::Bind(&Client::Quit, base::Unretained(this)));
 
-        _department.reset(new ChannelDepartment(MAIN_CHANNEL_NAME));
-        _department->Start();
+        {
+            base::Thread::Options options;
+            options.message_loop_type = base::MessageLoop::TYPE_IO;
+            _io_thread->StartWithOptions(options);
+        }
 
-        ChannelWorker::Options options;
-        options.handle.name = MAIN_CHANNEL_NAME;
-        options.mode = IPC::Channel::MODE_NAMED_CLIENT;
-        options.runner = _department->task_runner();
-        MainChannelWorker* mainWorker = new MainChannelWorker();
-        mainWorker->Initialize(options);
-        mainWorker->SetCreateCallback(base::Bind(&Client::OnCreateSubChannel, base::Unretained(this)));
-        _department->AddWorker(mainWorker);
+        {
+            AutomaticChannel::Options options;
+            options.id = static_cast<int32_t>(ChannelType::ControlChannel);
+            options.name = MAIN_CHANNEL_NAME;
+            options.mode = IPC::Channel::MODE_NAMED_CLIENT;
+            options.runner = _io_thread->task_runner();
+            options.listener = this;
+            options.automatic_options.enable = false;
+
+            AutomaticChannel* control_channel = new AutomaticChannel;
+            control_channel->Initialize(options);
+            _map.Add(control_channel);
+        }
     }
 
     void Stop() {
-        _department->Stop();
-        _loop->QuitWhenIdle();
-    }
-private:
-    void OnCreateSubChannel(const std::string& name) {
-        LOG(INFO) << "create sub channel: " << name;
-
-        ChannelWorker::Options options;
-        options.handle.name = name;
-        options.mode = IPC::Channel::MODE_NAMED_CLIENT;
-        options.runner = _department->task_runner();
-
-        _worker = new EchoChannelWorker();
-        _worker->Initialize(options);
-        _department->AddWorker(_worker);
+        _map.Clear();
+        _quit_thread->StopSoon();
+        _io_thread->StopSoon();
+        _main_loop->QuitWhenIdle();
     }
 
-    void MonitoringQuit() {
+    void Quit() {
         std::string cmd;
         while(true) {
             std::cin >> cmd;
-            if (cmd == "quit") {
+            if (cmd == "q") {
                 break;
             } else {
-                _worker->Send(new ChannelEchoMessage(0, cmd));
+                _main_loop->PostTask(FROM_HERE, base::Bind(&Client::SendEcho, base::Unretained(this), cmd));
             }
         }
-        _loop->PostTask(FROM_HERE, base::Bind(&Client::Stop, base::Unretained(this)));
+        _main_loop->PostTask(FROM_HERE, base::Bind(&Client::Stop, base::Unretained(this)));
     }
 private:
-    scoped_ptr<base::MessageLoop> _loop;
-    scoped_ptr<ChannelDepartment> _department;
-    scoped_ptr<base::Thread> _monitoring;
-    EchoChannelWorker* _worker;
+    void OnCreateResponse(const std::string& name) {
+        _map.Remove(_current);
+
+        AutomaticChannel::Options options;
+        options.id = static_cast<int32_t>(ChannelType::SubChannel);
+        options.name = name;
+        options.mode = IPC::Channel::MODE_NAMED_CLIENT;
+        options.runner = _io_thread->task_runner();
+        options.listener = this;
+        options.automatic_options.enable = false;
+
+        AutomaticChannel* control_channel = new AutomaticChannel;
+        control_channel->Initialize(options);
+        _map.Add(control_channel);
+    }
+
+    void SendEcho(const std::string& message) {
+        AutomaticChannel* channel = _map.Get(ChannelType::SubChannel);
+        if (channel != nullptr) {
+            channel->Send(new EchoMessage(0, message));
+        }
+    }
+
+    void OnEchoMessage(const std::string message) {
+        _current->Send(new EchoMessage(0, message));
+    }
+
+private:
+    ChannelMap _map;
+    scoped_ptr<base::MessageLoop> _main_loop;
+    scoped_ptr<base::Thread> _quit_thread;
+    scoped_ptr<base::Thread> _io_thread;
+    AutomaticChannel* _current;
+    DISALLOW_COPY_AND_ASSIGN(Client);
 };
 
 }
@@ -133,8 +154,10 @@ int main(int argc, char** argv) {
     logging::LoggingSettings settings;
     settings.logging_dest = logging::LOG_TO_SYSTEM_DEBUG_LOG;
     InitLogging(settings);
+    logging::SetLogItems(true, true, true, true);
 
-    demo::Client client;
+    cif::Client client;
+    client.Initialize();
     client.Run();
     return 0;
 }

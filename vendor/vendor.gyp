@@ -22,7 +22,7 @@
                 }]
             ],
             'dependencies': [
-                'experimental/ipc/ipc.gyp:ipc_posix_all'
+                'experimental/ipc/ipc.gyp:ipc_all'
             ]
         }
     ]

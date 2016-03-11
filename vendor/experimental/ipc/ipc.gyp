@@ -1,13 +1,13 @@
 {
   'targets': [
     {
-      'target_name': 'ipc_posix_client',
+      'target_name': 'ipc_client',
       'type': 'executable',
       'sources': [
         'message_generater.cc',
-        'channel_department.cc',
-        'channel_worker.cc',
-        'client.cc'
+        'automatic_channel.cc',
+        'channel_map.cc',
+        'client.cc',
       ],
       'dependencies': [
         '../../base/base.gyp:base',
@@ -15,13 +15,13 @@
       ]
     },
     {
-      'target_name': 'ipc_posix_server',
+      'target_name': 'ipc_server',
       'type': 'executable',
       'sources': [
         'message_generater.cc',
-        'channel_department.cc',
-        'channel_worker.cc',
-        'server.cc'
+        'automatic_channel.cc',
+        'channel_map.cc',
+        'server.cc',
       ],
       'dependencies': [
         '../../base/base.gyp:base',
@@ -29,11 +29,11 @@
       ]
     },
     {
-      'target_name': 'ipc_posix_all',
+      'target_name': 'ipc_all',
       'type': 'none',
       'dependencies': [
-        'ipc_posix_client',
-        'ipc_posix_server'
+        'ipc_client',
+        'ipc_server'
       ]
     }
   ]
